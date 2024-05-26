@@ -24,6 +24,10 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.ensemble import VotingClassifier
 
+def load_model_with_custom_transformer(path):
+    from __main__ import CustomTransformer
+    return joblib.load(path)
+
 class CustomTransformer(BaseEstimator, TransformerMixin):
     def __init__(self):
         self.stopwords_arabic = set(stopwords.words('arabic'))
@@ -80,7 +84,7 @@ class CustomTransformer(BaseEstimator, TransformerMixin):
 app = dash.Dash(external_stylesheets=[dbc.themes.SLATE])
 server = app.server
 # Load the pre-trained model
-loaded_pipeline = joblib.load('voting_pipeline_new.pkl')
+loaded_pipeline = load_model_with_custom_transformer('./voting_pipeline_new.pkl')
 
 # Define the layout of the app
 app.layout = dbc.Container([

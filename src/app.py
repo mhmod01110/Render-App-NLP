@@ -6,9 +6,10 @@ import joblib
 import plotly.express as px
 import re
 import nltk
-nltk.download('stopwords')
 from nltk.corpus import stopwords
 from sklearn.base import BaseEstimator, TransformerMixin
+
+nltk.download('stopwords')
 
 class CustomTransformer(BaseEstimator, TransformerMixin):
     def __init__(self):
@@ -18,9 +19,7 @@ class CustomTransformer(BaseEstimator, TransformerMixin):
         return self
 
     def transform(self, X):
-        transformed_X = X.copy()
-        transformed_X = X.apply(self.clean_txt)
-        return transformed_X
+        return X.apply(self.clean_txt)
 
     def clean_txt(self, text):
         text = re.sub(r'http[s]?://\S+', ' ', text)
@@ -33,20 +32,19 @@ class CustomTransformer(BaseEstimator, TransformerMixin):
         text = re.sub(r'[_\-\.\"\:\;\,\'\،\♡\\\)/(\&\؟]', ' ', text)
         text = re.sub(r'\d+', ' ', text)
         text_tokens = text.split()
-        filtered_text = text_tokens
-        text = ' '.join(filtered_text)
-        return text
+        return ' '.join(text_tokens)
 
     def fit_transform(self, X, y=None):
         self.fit(X, y)
         return self.transform(X)
 
-def load_model_with_custom_transformer(path):
-    from __main__ import CustomTransformer
-    return joblib.load(path)
+def custom_joblib_loader(filepath):
+    globals_dict = globals().copy()
+    globals_dict['CustomTransformer'] = CustomTransformer
+    return joblib.load(filepath, mmap_mode=None, globals=globals_dict)
 
 # Load the model
-loaded_pipeline = load_model_with_custom_transformer('voting_pipeline_new.pkl')
+loaded_pipeline = custom_joblib_loader('voting_pipeline_new.pkl')
 
 # Initialize Dash app
 app = dash.Dash(external_stylesheets=[dbc.themes.SLATE])

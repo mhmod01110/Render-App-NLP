@@ -28,7 +28,7 @@ class CustomTransformer(BaseEstimator, TransformerMixin):
         text = re.sub(r'[\U00010000-\U0010ffff]', ' ', text)
         text = re.sub(r':[a-z_]+:', ' ', text)
         text = re.sub('[*?!#@]', ' ', text)
-        text = re.sub(r'\|\|+\s*\d+%\s*\|\|+?[_\-\.\?]+', ' ', text)
+        text = re.sub(r'\|\|+\\s*\d+%\s*\|\|+?[_\-\.\?]+', ' ', text)
         text = re.sub(r'[_\-\.\"\:\;\,\'\،\♡\\\)/(\&\؟]', ' ', text)
         text = re.sub(r'\d+', ' ', text)
         text_tokens = text.split()
@@ -39,9 +39,10 @@ class CustomTransformer(BaseEstimator, TransformerMixin):
         return self.transform(X)
 
 def custom_joblib_loader(filepath):
-    globals_dict = globals().copy()
-    globals_dict['CustomTransformer'] = CustomTransformer
-    return joblib.load(filepath, mmap_mode=None, globals=globals_dict)
+    # Import the custom transformer class so it's available during deserialization
+    import __main__
+    __main__.CustomTransformer = CustomTransformer
+    return joblib.load(filepath)
 
 # Load the model
 loaded_pipeline = custom_joblib_loader('voting_pipeline_new.pkl')

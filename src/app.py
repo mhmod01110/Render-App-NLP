@@ -28,58 +28,6 @@ def load_model_with_custom_transformer(path):
     from __main__ import CustomTransformer
     return joblib.load(path)
 
-class CustomTransformer(BaseEstimator, TransformerMixin):
-    def __init__(self):
-        self.stopwords_arabic = set(stopwords.words('arabic'))
-
-    def fit(self, X, y=None):
-        # Add code for fitting the transformer here
-        return self
-
-    def transform(self, X):
-        transformed_X = X.copy()
-        transformed_X = X.apply(self.clean_txt)
-        return transformed_X
-
-    def clean_txt(self, text):
-        # Remove URLs
-        text = re.sub(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', ' ', text)
-
-        # Remove usernames starting with @
-        text = re.sub(r'@[\w_]+', ' ', text)
-
-        # Remove English words
-        text = re.sub(r'\b[a-zA-Z]+\b', ' ', text)
-
-        # Remove emojis
-        text = re.sub(r'[\U00010000-\U0010ffff]', ' ', text)
-        text = re.sub(r':[a-z_]+:', ' ', text)
-
-        # Remove special characters
-        text = re.sub('[*?!#@]', ' ', text)
-
-        # Remove redundant percentage and bar lines
-        text = re.sub(r'\|\|+\s*\d+%\s*\|\|+?[_\-\.\?]+', ' ', text)
-
-        text = re.sub(r'[_\-\.\"\:\;\,\'\،\♡\\\)/(\&\؟]', ' ', text)
-
-        # Remove digits
-        text = re.sub(r'\d+', ' ', text)
-
-        text_tokens = text.split()
-
-        # filtered_text = [word for word in text_tokens if word not in self.stopwords_arabic]
-        filtered_text = text_tokens
-        # Split and rejoin
-        text = ' '.join(filtered_text)
-
-        return text
-
-    def fit_transform(self, X, y=None):
-        # This function combines fit and transform
-        self.fit(X, y)
-        return self.transform(X)
-
 # Initialize Dash app
 app = dash.Dash(external_stylesheets=[dbc.themes.SLATE])
 server = app.server
@@ -167,4 +115,56 @@ def update_output(predict_clicks, reset_clicks, text):
 
 # Run the app
 if __name__ == '__main__':
+    class CustomTransformer(BaseEstimator, TransformerMixin):
+        def __init__(self):
+            self.stopwords_arabic = set(stopwords.words('arabic'))
+    
+        def fit(self, X, y=None):
+            # Add code for fitting the transformer here
+            return self
+    
+        def transform(self, X):
+            transformed_X = X.copy()
+            transformed_X = X.apply(self.clean_txt)
+            return transformed_X
+    
+        def clean_txt(self, text):
+            # Remove URLs
+            text = re.sub(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', ' ', text)
+    
+            # Remove usernames starting with @
+            text = re.sub(r'@[\w_]+', ' ', text)
+    
+            # Remove English words
+            text = re.sub(r'\b[a-zA-Z]+\b', ' ', text)
+    
+            # Remove emojis
+            text = re.sub(r'[\U00010000-\U0010ffff]', ' ', text)
+            text = re.sub(r':[a-z_]+:', ' ', text)
+    
+            # Remove special characters
+            text = re.sub('[*?!#@]', ' ', text)
+    
+            # Remove redundant percentage and bar lines
+            text = re.sub(r'\|\|+\s*\d+%\s*\|\|+?[_\-\.\?]+', ' ', text)
+    
+            text = re.sub(r'[_\-\.\"\:\;\,\'\،\♡\\\)/(\&\؟]', ' ', text)
+    
+            # Remove digits
+            text = re.sub(r'\d+', ' ', text)
+    
+            text_tokens = text.split()
+    
+            # filtered_text = [word for word in text_tokens if word not in self.stopwords_arabic]
+            filtered_text = text_tokens
+            # Split and rejoin
+            text = ' '.join(filtered_text)
+    
+            return text
+    
+        def fit_transform(self, X, y=None):
+            # This function combines fit and transform
+            self.fit(X, y)
+            return self.transform(X)
+
     app.run_server(debug=True)

@@ -111,7 +111,7 @@ def update_output(predict_clicks, reset_clicks, text):
         labels = list(prob_dict.keys())
         probs = list(prob_dict.values())
         fig = px.bar(x=labels, y=probs, labels={'x': 'الدولة', 'y': 'الاحتمال'}, title='نسبة التأكد من التخمين للهجات المختلفة')
-        fig.update_traces(marker_color=['gold' if label == final_prediction_name else 'gray' for label in labels])
+        fig.update_traces(marker_color=['goldenrod' if label == final_prediction_name else 'gray' for label in labels])
         alert = dbc.Alert(f"التنبؤ: {final_prediction_name}", color="info", className="d-grid gap-2 col-6 mx-auto", style={'textAlign': 'center', 'marginBottom': '30px', 'color': 'black', 'fontWeight': 'bold', 'fontSize': '20px'})
         return fig, alert, text
     elif button_id == "reset-button":

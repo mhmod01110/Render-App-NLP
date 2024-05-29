@@ -55,7 +55,7 @@ server = app.server
 app.layout = dbc.Container([
     dbc.Row([
         dbc.Col([
-            html.H1("تخمين اللهجات العربية", style={'textAlign': 'center', 'marginBottom': '30px', 'color': 'goldenrod', 'fontWeight': 'bold'})
+            html.H1("تخمين اللهجات العربية",  style={'textAlign': 'center', 'marginTop': '50px','marginBottom': '20px', 'color': 'goldenrod', 'fontWeight': 'bold'})
         ])
     ]),
     dbc.Row([
@@ -110,9 +110,20 @@ def update_output(predict_clicks, reset_clicks, text):
         final_prediction_name = label_name_mapping[final_prediction_label]
         labels = list(prob_dict.keys())
         probs = list(prob_dict.values())
-        fig = px.bar(x=labels, y=probs, labels={'x': 'الدولة', 'y': 'الاحتمال'}, title='نسبة التأكد من التخمين للهجات المختلفة')
-        fig.update_traces(marker_color=['goldenrod' if label == final_prediction_name else 'gray' for label in labels])
-        alert = dbc.Alert(f"التنبؤ: {final_prediction_name}", color="info", className="d-grid gap-2 col-6 mx-auto", style={'textAlign': 'center', 'marginBottom': '30px', 'color': 'black', 'fontWeight': 'bold', 'fontSize': '20px'})
+        fig = px.bar(x=labels, y=probs, labels={'x': 'الدولة', 'y': 'الاحتمال'}, title='نسبة التأكد من التخمين')
+
+        fig.update_traces(marker_color=['goldenrod' if label == final_prediction_name else 'gray' for label in labels],
+                          text=probs, texttemplate='%{text:.2f}', textposition='outside', textfont_size=14, textfont_family='Arial', textfont_color='white')
+        
+        fig.update_layout(height=400, width=600, margin=dict(l=40, r=40, t=40, b=40), 
+                          title={'x':0.5, 'xanchor': 'center', 'font': {'size': 20, 'family': 'Arial', 'color': 'white'}},
+                          plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                          xaxis={'title': {'text': 'الدولة', 'font': {'size': 18, 'family': 'Arial', 'color': 'white'}}, 
+                                 'tickfont': {'size': 14, 'family': 'Arial', 'color': 'white'}},
+                          yaxis={'title': {'text': 'الاحتمال', 'font': {'size': 18, 'family': 'Arial', 'color': 'white'}}, 
+                                 'tickfont': {'size': 14, 'family': 'Arial', 'color': 'white'}})
+
+        alert = dbc.Alert(f"التنبؤ: {final_prediction_name}", color="info", className="d-grid gap-2 col-6 mx-auto", style={'textAlign': 'center', 'marginTop': '50px','marginBottom': '30px', 'color': 'black', 'fontWeight': 'bold', 'fontSize': '20px'})
         return fig, alert, text
     elif button_id == "reset-button":
         return {}, None, ""

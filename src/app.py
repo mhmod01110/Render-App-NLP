@@ -67,13 +67,13 @@ app.layout = dbc.Container([
         dbc.Col([
             dcc.Textarea(
                 id="text-input",
-                placeholder="Enter your text here",
+                placeholder="رجاء إدخال نص عربي",
                 style={"width": "100%", "height": "200px"},
-                className="mb-3"
+                className="dark-textarea"
             ),
             dbc.Button("تخمين", id="predict-button", color="light", size="lg", className="d-grid gap-2 col-6 mx-auto"),
             html.Div(id="prediction-alert"),
-            html.Button("مسح", id="reset-button", n_clicks=0, className="d-grid gap-2 col-6 mx-auto mt-3", style={"fontSize": "20px"})
+            html.Button("مسح", id="reset-button", n_clicks=0, className="btn btn-danger", style={"fontSize": "20px"})
         ], width=6),
         dbc.Col([
             dcc.Graph(id="probability-graph")

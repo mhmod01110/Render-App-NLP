@@ -68,22 +68,28 @@ app.layout = dbc.Container([
             dcc.Textarea(
                 id="text-input",
                 placeholder="رجاء إدخال نص عربي",
-                style={"width": "100%", "height": "200px", "backgroundColor": "#343a40", "color": "#ffffff"},
+                style={"width": "100%", "height": "200px", "backgroundColor": "#343a40", "color": "#ffd633"},
                 className="dark-textarea"
             ),
             dbc.Row([
                 dbc.Col([
-                    dbc.Button("تخمين", id="predict-button", color="light", size="lg", className="d-grid gap-2 col-6 mx-auto")
-                ], width="auto"),
+                    dbc.Button("تخمين", id="predict-button", color="light", size="lg", className="d-grid gap-2 col-9")
+                ], width=6, style={'textAlign': 'center'}),
                 dbc.Col([
-                    html.Button("مسح", id="reset-button", n_clicks=0, className="btn btn-danger", style={"fontSize": "20px"})
-                ], width="auto")
-            ], justify="start"),
+                    dbc.Button("مسح", id="reset-button", n_clicks=0, color="danger", size="lg", className="d-grid gap-2 col-9")
+                ], width=4, style={'textAlign': 'center'})
+            ], justify="center"),
             html.Div(id="prediction-alert", style={"marginTop": "20px"})
         ], width=6),
         dbc.Col([
             dcc.Graph(id="probability-graph")
         ], width=6)
+    ]),
+    dbc.Row([
+        dbc.Col([
+            html.P("Done By : Mahmoud Ahmed Shawqi", style={'textAlign': 'center', 'color': 'goldenrod', 'fontWeight': 'bold'}),
+            html.A("Linkedin : Mahmoud A.Shawqi", href="https://www.linkedin.com/in/mhmod01110/", style={'textAlign': 'center', 'color': 'goldenrod', 'fontWeight': 'bold', 'display': 'block'})
+        ])
     ])
 ])
 

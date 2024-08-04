@@ -45,7 +45,7 @@ def custom_joblib_loader(filepath):
     return joblib.load(filepath)
 
 # Load the model
-loaded_pipeline = custom_joblib_loader('./voting_pipeline_new.pkl')
+loaded_pipeline = custom_joblib_loader('src/voting_pipeline_new.pkl')
 
 # Initialize Dash app
 app = dash.Dash(external_stylesheets=[dbc.themes.SLATE])
